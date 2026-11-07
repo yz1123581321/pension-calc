@@ -194,11 +194,43 @@
   .item.sum .nm { font-weight: 700; color: var(--accent); }
   .item.sum .amt { font-size: 20px; color: var(--accent); }
 
-  .facts { margin-top: 12px; background: var(--card); border-radius: var(--radius); padding: 13px 14px; box-shadow: 0 1px 2px rgba(20, 22, 26, .04); }
-  .facts .rhead2 { margin-bottom: 6px; }
-  .fact { display: flex; justify-content: space-between; gap: 10px; padding: 4px 0; font-size: 12px; }
-  .fact dt { color: var(--muted); }
-  .fact dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+  /* 区块间距 */
+  .blk { margin-top: 16px; }
+  .blk .rhead2 { margin-bottom: 8px; }
+
+  /* 数字来源标签 */
+  .chip {
+    display: inline-block;
+    padding: 0 5px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 600;
+    font-style: normal;
+    line-height: 16px;
+    vertical-align: 1px;
+    white-space: nowrap;
+  }
+  .chip--user { background: #e8f6ed; color: #17794a; }
+  .chip--auto { background: #fff2e0; color: #a05e00; }
+  .chip--ref  { background: #eff0f4; color: #5f6673; }
+  .chip--calc { background: #eaeafc; color: #4a43c9; }
+
+  /* 本次测算用的数字 */
+  .params { margin-top: 14px; background: var(--card); border-radius: var(--radius); padding: 13px 14px; box-shadow: 0 1px 2px rgba(20, 22, 26, .04); }
+  .params .rhead2 { margin-bottom: 6px; }
+  .pnote { margin: 0 0 6px; font-size: 11.5px; line-height: 1.65; color: var(--muted); text-wrap: pretty; }
+  .pnote b { color: #a05e00; font-weight: 700; }
+  .pitem { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+  .pitem:first-of-type { border-top: 0; }
+  .pn { font-size: 12.5px; font-weight: 600; color: var(--sub); }
+  .pd { margin-top: 2px; font-size: 11px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
+  .pv { flex: 0 0 auto; font-size: 13.5px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+  /* 官方渠道 */
+  .how { padding-bottom: 4px; }
+  .how .dgroup h4 { display: flex; align-items: center; gap: 6px; }
+  .how .dgroup h4 .ic { width: 14px; height: 14px; color: var(--muted); }
+  .how .dgroup p b { color: var(--sub); font-weight: 600; }
 
   details.detail { margin-top: 12px; background: var(--card); border-radius: var(--radius); padding: 0 14px; box-shadow: 0 1px 2px rgba(20, 22, 26, .04); }
   details.detail > summary {
@@ -230,7 +262,7 @@
 
   <header class="head">
     <h1>养老金测算器</h1>
-    <p>选身份、填年月，自动按规则推算你能领多少、还有多久退休</p>
+    <p>算出你每月个人交多少、退休能领多少、还要多久退休</p>
   </header>
 
   <section class="ids" id="ids"></section>
@@ -239,8 +271,34 @@
     <div class="card" id="fields"></div>
 
     <details class="panel" id="advPanel">
-      <summary><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5h16M4 12h16M4 16.5h16"/></svg>我清楚我的账户数字</summary>
+      <summary><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5h16M4 12h16M4 16.5h16"/></svg>我查到了准确数字（填了更准）</summary>
       <div id="advFields"></div>
+    </details>
+
+    <details class="panel" id="howPanel">
+      <summary><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 16v-4.5M12 8.2h.01"/></svg>这些数字去哪儿查（官方渠道）</summary>
+      <div class="how">
+        <div class="dgroup">
+          <h4>电子社保卡</h4>
+          <p>微信 / 支付宝搜「电子社保卡」→ 社保查询 → <b>个人权益记录单</b>。能看到<b>缴费基数、累计缴费月数、个人账户余额</b>，最权威、最全。</p>
+        </div>
+        <div class="dgroup">
+          <h4>掌上 12333</h4>
+          <p>人社部官方 App，登录后「社会保险 → 个人权益」可查同样的三项，还能看每月缴费明细。</p>
+        </div>
+        <div class="dgroup">
+          <h4>国家社会保险公共服务平台</h4>
+          <p><b>si.12333.gov.cn</b> → 个人权益记录查询，可下载带印章的权益单，适合核对累计年限。</p>
+        </div>
+        <div class="dgroup">
+          <h4>工资条 / 个税 App</h4>
+          <p>工资条上「<b>养老保险（个人）</b>」那一栏就是每月个人缴费额；「个人所得税」App 的社保扣除也能反查。</p>
+        </div>
+        <div class="dgroup">
+          <h4>社平工资（计发基数）</h4>
+          <p>当地<b>人社局官网</b>每年公布「全口径城镇单位就业人员平均工资」，或打 <b>12333</b> 热线问，这是计发基数最准确的来源。</p>
+        </div>
+      </div>
     </details>
 
     <p id="formError" class="err" hidden></p>
@@ -262,9 +320,12 @@
      ============================================================ */
   const CONFIG = {
     nationalAvgWage: 8000,          // 全国参考社平工资 / 计发基数（元/月）
-    personalAccountRate: 0.08,      // 企业职工个人账户入账比例
+    personalAccountRate: 0.08,      // 企业职工个人账户入账比例 = 个人缴费比例
+    employerRate: 0.16,             // 企业职工单位缴费比例（进统筹）
     flexibleEmploymentRate: 0.20,   // 灵活就业总费率
     flexibleAccountRate: 0.08,      // 灵活就业进个人账户比例
+    govAnnuityPersonal: 0.04,       // 职业年金个人缴费比例
+    govAnnuityEmployer: 0.08,       // 职业年金单位缴费比例
     minIndex: 0.6,                  // 缴费基数下限 = 社平 × 60%
     maxIndex: 3.0,                  // 缴费基数上限 = 社平 × 300%
     basePensionYearRate: 0.01,      // 基础养老金：每满 1 年计发 1%
@@ -428,6 +489,7 @@
     const birth = { y: raw.birthYear, m: raw.birthMonth };
     const start = { y: raw.startYear, m: raw.startMonth };
     const socAvg = raw.advWage > 0 ? raw.advWage : CONFIG.nationalAvgWage;
+    const socSrc = raw.advWage > 0 ? 'user' : 'ref';
     const baseAge = baseAgeOf(raw);
 
     // 退休时间：城乡居民固定 60 岁领取（不参与延迟退休）；其余身份手动年龄优先，否则按延迟退休规则
@@ -447,12 +509,21 @@
     const monthsToRetire = Math.max(0, monthsBetween(now, retire));
     const accEnd = earlierYM(now, retire);             // 账户累计截止到退休那个月
     const workedMonths = Math.max(0, monthsBetween(start, accEnd));
-    const totalMonths = Math.max(0, monthsBetween(start, retire));
+    // 累计缴费年限：填了社保 App 的累计年限，就用「已缴年限 + 到退休还要缴的月数」
+    let totalMonths, totalSrc;
+    if (raw.advTotalYears > 0) {
+      totalMonths = Math.round(raw.advTotalYears * 12) + monthsToRetire;
+      totalSrc = 'user';
+    } else {
+      totalMonths = Math.max(0, monthsBetween(start, retire));
+      totalSrc = 'auto';
+    }
     const totalYears = totalMonths / 12;
     const months = getPayoutMonths(retireAgeMonths / 12);
 
     const rows = [];
-    const facts = [];
+    const params = [];
+    const payRows = [];
 
     function addRow(key, icon, name, note, amountRaw, detail) {
       rows.push({
@@ -460,12 +531,50 @@
         amount: Math.round(amountRaw || 0), detail: detail || ''
       });
     }
-    function stat(label, value) { facts.push({ label: label, value: value }); }
+    // 本次测算实际用到的每个数字：来源 user(你填的) / auto(系统估) / ref(参考值) / calc(按公式推算) / rule(按规则)
+    // field / short：算完后把估算值回填成对应输入框的 placeholder，让用户看见“系统替他填了什么”
+    function pm(label, value, src, note, field, short) {
+      params.push({ label: label, value: value, src: src, note: note || '', field: field || '', short: short || '' });
+    }
+    function payRow(iconName, name, note, amount, unit) {
+      payRows.push({
+        icon: iconName, name: name, note: note,
+        amount: Math.round(amount || 0), unit: unit || '元/月'
+      });
+    }
+    function paySub(name, note, amount, unit) {
+      payRows.push({
+        icon: '', name: name, note: note,
+        amount: Math.round(amount || 0), unit: unit || '元/月', sub: true
+      });
+    }
 
     /* ---------------- 企业职工 / 机关事业 ---------------- */
     if (raw.identity === 'employee' || raw.identity === 'gov') {
       const isGov = raw.identity === 'gov';
-      const base = clamp(raw.income, socAvg * CONFIG.minIndex, socAvg * CONFIG.maxIndex);
+      const minB = socAvg * CONFIG.minIndex;
+      const maxB = socAvg * CONFIG.maxIndex;
+      const rangeText = pct(CONFIG.minIndex) + '–' + pct(CONFIG.maxIndex);
+
+      /* 缴费基数优先级：社保 App 的缴费基数 > 工资条个人缴费额 ÷ 8% > 月收入 */
+      let base, baseSrc, baseNote;
+      if (raw.advBase > 0) {
+        base = clamp(raw.advBase, minB, maxB);
+        baseSrc = 'user';
+        baseNote = '你填的社保 App 缴费基数' +
+          (Math.abs(base - raw.advBase) > 1 ? '（超出社平 ' + rangeText + '，已按上下限调整）' : '');
+      } else if (raw.monthlyPay > 0) {
+        base = clamp(raw.monthlyPay / CONFIG.personalAccountRate, minB, maxB);
+        baseSrc = 'user';
+        baseNote = '按你填的个人月缴 ' + money(raw.monthlyPay) + ' 元 ÷ ' + pct(CONFIG.personalAccountRate) + ' 反推';
+      } else {
+        base = clamp(raw.income, minB, maxB);
+        baseSrc = 'auto';
+        baseNote = '按月收入 ' + money(raw.income) + ' 元估算，并限制在社平 ' + rangeText + ' 之间';
+      }
+
+      const personalPay = base * CONFIG.personalAccountRate;   // 个人每月缴养老
+      const employerPay = base * CONFIG.employerRate;          // 单位每月缴养老
       const indexActual = clamp(base / socAvg, CONFIG.minIndex, CONFIG.maxIndex);
       const buildYM = isGov ? CONFIG.govReform : CONFIG.accountBuild;
 
@@ -475,18 +584,19 @@
 
       // 个人账户：建账后按缴费基数 × 入账比例累计到退休（含未来缴费推算，不计记账利息）
       const accStart = laterYM(start, buildYM);
-      const accMonths = Math.max(0, monthsBetween(accStart, retire));
+      const accMonths = Math.max(0, Math.min(monthsBetween(accStart, retire), totalMonths));
       const accAuto = base * CONFIG.personalAccountRate * accMonths;
       const account = raw.advAccount == null ? accAuto : Math.max(0, raw.advAccount);
 
       // 机关事业：实缴指数与视同指数按年限加权
       const deemedIndex = raw.advDeemedIndex == null ? CONFIG.govDeemedIndex : Math.max(0, raw.advDeemedIndex);
-      let avgIndex = raw.advIndex == null ? indexActual : Math.max(0, raw.advIndex);
+      const actualIndex = raw.advIndex == null ? indexActual : Math.max(0, raw.advIndex);
+      let avgIndex = actualIndex;
       if (isGov) {
         const actualYears = Math.max(0, totalYears - deemedYears);
         avgIndex = totalYears > 0
-          ? (indexActual * actualYears + deemedIndex * deemedYears) / totalYears
-          : indexActual;
+          ? (actualIndex * actualYears + deemedIndex * deemedYears) / totalYears
+          : actualIndex;
       }
 
       /* 基础养老金 = 社平 × (1 + 指数) ÷ 2 × 缴费年限 × 1% */
@@ -517,55 +627,106 @@
           money(socAvg) + ' × ' + idx2(tIndex) + ' × ' + dur(deemedYears * 12) + ' × ' + pct(tCoeff));
       }
 
-      let annuityBalance = 0;
+      let annuityBalance = 0, annuityManual = false;
       if (isGov) {
         // 职业年金：改革后按“缴费基数 × 12%”累计到退休（基数已封顶，不再用原始收入）
         const realWorked = Math.max(0, monthsBetween(accStart, retire));
         const annuityAuto = base * CONFIG.govAnnuityRate * realWorked;
         const annuity = raw.advAnnuity == null ? annuityAuto : Math.max(0, raw.advAnnuity);
         annuityBalance = annuity;
+        annuityManual = raw.advAnnuity != null;
         addRow('annuity', 'bank', '职业年金', '单位 8% + 个人 4%', annuity / months,
           money(annuity) + ' 元 ÷ ' + months + ' 个月');
       } else if (raw.advAnnuity > 0) {
         annuityBalance = raw.advAnnuity;
+        annuityManual = true;
         addRow('annuity', 'bank', '企业年金', '部分单位有', raw.advAnnuity / months,
           money(raw.advAnnuity) + ' 元 ÷ ' + months + ' 个月');
       }
 
-      stat('缴费基数', money(base) + ' 元/月');
+      /* -------- 本次测算用的数字 -------- */
+      pm('社平工资 / 计发基数', money(socAvg) + ' 元/月', socSrc,
+        socSrc === 'user' ? '你填的当地公布数' : '全国参考值，各地差别大，建议改成当地人社局公布数',
+        'advWage', money(socAvg));
+      pm('缴费基数', money(base) + ' 元/月', baseSrc, baseNote, 'advBase', money(base));
+      pm('个人每月缴养老', money(personalPay) + ' 元/月', 'calc',
+        '缴费基数 × ' + pct(CONFIG.personalAccountRate) + '，全部进个人账户');
+      pm('单位每月缴养老', money(employerPay) + ' 元/月', 'calc',
+        '缴费基数 × ' + pct(CONFIG.employerRate) + '，进统筹基金，不进个人账户');
+      if (isGov) {
+        pm('职业年金 · 个人每月', money(base * CONFIG.govAnnuityPersonal) + ' 元/月', 'calc',
+          '缴费基数 × 4%，进年金账户');
+        pm('职业年金 · 单位每月', money(base * CONFIG.govAnnuityEmployer) + ' 元/月', 'calc',
+          '缴费基数 × 8%，进年金账户');
+      }
+      pm('平均缴费指数', idx2(avgIndex), raw.advIndex == null ? 'auto' : 'user',
+        isGov ? '实缴指数与视同指数按年限加权'
+          : (raw.advIndex == null ? '缴费基数 ÷ 社平工资' : '你填的社保 App 指数'),
+        'advIndex', idx2(avgIndex));
       if (deemedYears > 0) {
-        stat('视同缴费年限', dur(deemedYears * 12));
-        if (isGov) stat('视同缴费指数', idx2(deemedIndex));
+        pm('视同缴费年限', dur(deemedYears * 12), raw.advDeemed == null ? 'auto' : 'user',
+          isGov ? '2014 年 10 月前的工作年限' : '1996 年建账前的工作年限，按参工时间推算',
+          'advDeemed', String(Math.round(deemedYears * 10) / 10));
+        if (isGov) {
+          pm('视同缴费指数', idx2(deemedIndex), raw.advDeemedIndex == null ? 'ref' : 'user',
+            '按全国中性参考值 1.00', 'advDeemedIndex', idx2(deemedIndex));
+        }
       }
-      stat('平均缴费指数', idx2(avgIndex));
-      stat('累计缴费', dur(totalMonths));
-      stat('个人账户余额' + (accountIsManual ? '（你填的）' : '（推算到退休）'), money(account) + ' 元');
+      pm('累计缴费年限（到退休）', dur(totalMonths), totalSrc,
+        totalSrc === 'user' ? '你查到的累计缴费年限，加算到退休当月'
+          : '从参工年月算到退休年月，未扣除断缴月份',
+        'advTotalYears', String(Math.round((workedMonths / 12) * 10) / 10));
+      pm('个人账户余额（到退休）', money(account) + ' 元', accountIsManual ? 'user' : 'auto',
+        accountIsManual ? '你填的余额（未含今后继续缴费）'
+          : '缴费基数 × 8% × ' + accMonths + ' 个月，未计记账利息');
       if (annuityBalance > 0) {
-        const annuityIsManual = raw.advAnnuity != null;
-        stat((isGov ? '职业年金余额' : '企业年金余额') + (annuityIsManual ? '（你填的）' : '（推算到退休）'),
-          money(annuityBalance) + ' 元');
+        pm((isGov ? '职业年金' : '企业年金') + '余额（到退休）', money(annuityBalance) + ' 元',
+          annuityManual ? 'user' : 'auto',
+          annuityManual ? '你填的余额' : '缴费基数 × ' + pct(CONFIG.govAnnuityRate) + ' × ' + accMonths + ' 个月');
       }
+      pm('计发月数', months + ' 个月', 'rule',
+        '退休年龄 ' + ageText(retireAgeMonths) + '，查全国统一计发月数表');
+
+      /* -------- 每月缴费 -------- */
+      payRow('user', '个人每月缴养老', '缴费基数 ' + pct(CONFIG.personalAccountRate) + '，全部进你的个人账户', personalPay);
+      payRow('building', '单位每月缴养老', '缴费基数 ' + pct(CONFIG.employerRate) + '，进统筹基金', employerPay);
+      if (isGov) {
+        payRow('user', '职业年金 · 个人', '缴费基数 × 4%，进年金账户', base * CONFIG.govAnnuityPersonal);
+        payRow('bank', '职业年金 · 单位', '缴费基数 × 8%，进年金账户', base * CONFIG.govAnnuityEmployer);
+      }
+      paySub('你每月工资里被扣的部分',
+        isGov ? '养老 8% + 年金 4%，不含医疗、失业、公积金' : '养老 8%，不含医疗、失业、公积金',
+        personalPay + (isGov ? base * CONFIG.govAnnuityPersonal : 0));
     }
 
     /* ---------------- 灵活就业 ---------------- */
     if (raw.identity === 'flexible') {
       const minBase = socAvg * CONFIG.minIndex;
       const maxBase = socAvg * CONFIG.maxIndex;
-      let base, outOfRange = '';   // '' | 'low' | 'high'
+      let base, baseSrc, baseNote, outOfRange = '';   // '' | 'low' | 'high'
 
-      if (raw.flexMode === 'grade') {
+      if (raw.advBase > 0) {
+        base = clamp(raw.advBase, minBase, maxBase);
+        baseSrc = 'user';
+        baseNote = '你填的社保 App 缴费基数';
+      } else if (raw.flexMode === 'grade') {
         base = clamp(socAvg * Number(raw.flexGrade), minBase, maxBase);
+        baseSrc = 'auto';
+        baseNote = '社平工资 ' + money(socAvg) + ' × 你选的档次 ' + pct(raw.flexGrade);
       } else {
         const payIn = Math.max(0, raw.flexAmount);
         const rawBase = payIn / CONFIG.flexibleEmploymentRate;
         base = clamp(rawBase, minBase, maxBase);
+        baseSrc = 'user';
+        baseNote = '按你填的月缴 ' + money(payIn) + ' 元 ÷ ' + pct(CONFIG.flexibleEmploymentRate) + ' 反推';
         if (rawBase < minBase - 1) outOfRange = 'low';
         else if (rawBase > maxBase + 1) outOfRange = 'high';
       }
       // 缴费额由“封顶后的基数”回算，保证“缴多少”和“算多少”是同一套数
       const pay = base * CONFIG.flexibleEmploymentRate;
+      const toAccount = base * CONFIG.flexibleAccountRate;
       const index = clamp(base / socAvg, CONFIG.minIndex, CONFIG.maxIndex);
-      const accMonths = Math.max(0, monthsBetween(start, retire));
+      const accMonths = Math.max(0, Math.min(monthsBetween(start, retire), totalMonths));
       const accAuto = base * CONFIG.flexibleAccountRate * accMonths;
       const account = raw.advAccount == null ? accAuto : Math.max(0, raw.advAccount);
       const deemedYears = raw.advDeemed == null ? 0 : Math.max(0, raw.advDeemed);
@@ -586,13 +747,42 @@
           money(socAvg) + ' × ' + idx2(avgIndex) + ' × ' + dur(deemedYears * 12) + ' × ' + pct(CONFIG.transitionCoeffEnterprise));
       }
 
-      // 缴费额被上下限夹住时，标签里点明方向，避免“我交 200 怎么按 960 算”的误解
-      stat('每月缴费' + (outOfRange === 'low' ? '（低于最低档，已按下限计）'
-        : outOfRange === 'high' ? '（超出上限，已按上限计）' : ''), money(pay) + ' 元');
-      stat('缴费基数', money(base) + ' 元/月');
-      stat('平均缴费指数', idx2(avgIndex));
-      stat('累计缴费', dur(totalMonths));
-      stat('个人账户余额' + (raw.advAccount == null ? '（推算到退休）' : '（你填的）'), money(account) + ' 元');
+      /* -------- 本次测算用的数字 -------- */
+      pm('社平工资 / 计发基数', money(socAvg) + ' 元/月', socSrc,
+        socSrc === 'user' ? '你填的当地公布数' : '全国参考值，各地差别大，建议改成当地人社局公布数',
+        'advWage', money(socAvg));
+      pm('缴费基数', money(base) + ' 元/月', baseSrc,
+        baseNote + (outOfRange === 'low' ? '（低于下限，已按社平 ' + pct(CONFIG.minIndex) + ' 计）'
+          : outOfRange === 'high' ? '（超上限，已按社平 ' + pct(CONFIG.maxIndex) + ' 计）' : ''),
+        'advBase', money(base));
+      pm('每月缴费（' + pct(CONFIG.flexibleEmploymentRate) + '）', money(pay) + ' 元/月', 'calc',
+        '基数 × 20%，灵活就业由个人全额承担');
+      pm('其中进个人账户（' + pct(CONFIG.flexibleAccountRate) + '）', money(toAccount) + ' 元/月', 'calc',
+        '只有这部分进你的个人账户');
+      pm('其中进统筹（' + pct(CONFIG.flexibleEmploymentRate - CONFIG.flexibleAccountRate) + '）',
+        money(pay - toAccount) + ' 元/月', 'calc', '用于发基础养老金，不进个人账户');
+      pm('平均缴费指数', idx2(avgIndex), raw.advIndex == null ? 'auto' : 'user',
+        raw.advIndex == null ? '缴费基数 ÷ 社平工资' : '你填的社保 App 指数',
+        'advIndex', idx2(avgIndex));
+      if (deemedYears > 0) {
+        pm('视同缴费年限', dur(deemedYears * 12), raw.advDeemed == null ? 'auto' : 'user',
+          '1996 年建账前的工作年限', 'advDeemed', String(Math.round(deemedYears * 10) / 10));
+      }
+      pm('累计缴费年限（到退休）', dur(totalMonths), totalSrc,
+        totalSrc === 'user' ? '你查到的累计缴费年限，加算到退休当月'
+          : '从开始缴费年月算到退休年月，未扣除断缴月份',
+        'advTotalYears', String(Math.round((workedMonths / 12) * 10) / 10));
+      pm('个人账户余额（到退休）', money(account) + ' 元', raw.advAccount == null ? 'auto' : 'user',
+        raw.advAccount == null
+          ? '缴费基数 × 8% × ' + accMonths + ' 个月，未计记账利息'
+          : '你填的余额（未含今后继续缴费）');
+      pm('计发月数', months + ' 个月', 'rule',
+        '退休年龄 ' + ageText(retireAgeMonths) + '，查全国统一计发月数表');
+
+      /* -------- 每月缴费 -------- */
+      payRow('wallet', '每月缴费合计', '基数 × 20%，自己全额承担', pay);
+      payRow('coins', '其中进个人账户', '基数 × 8%，退休后按月返还', toAccount);
+      paySub('其中进统筹基金', '基数 × 12%，用于发基础养老金', pay - toAccount);
     }
 
     /* ---------------- 城乡居民 ---------------- */
@@ -608,15 +798,29 @@
       const personal = account / months;
 
       addRow('basic', 'home', '基础养老金', '当地公布标准，各地不同', basePension,
-        '按全国参考值 ' + money(CONFIG.urbanRuralBasePension) + ' 元/月估算');
+        (raw.advUrbanBase == null ? '按全国参考值 ' + money(CONFIG.urbanRuralBasePension) + ' 元/月估算' : '按你填写的当地标准'));
       addRow('personal', 'coins', '个人账户养老金', '个人缴费 + 政府补贴', personal,
         money(account) + ' 元 ÷ ' + months + ' 个月' +
         (raw.advAccount == null ? '（按年缴 + 补贴累计算到 60 岁，未计利息）' : '（为你填写的余额）'));
 
-      stat('每年缴费', money(annual) + ' 元');
-      stat('政府补贴', money(subsidy) + ' 元/年');
-      stat('缴费年限', dur(totalMonths));
-      stat('个人账户累计' + (raw.advAccount == null ? '（推算到领取）' : '（你填的）'), money(account) + ' 元');
+      /* -------- 本次测算用的数字 -------- */
+      pm('每年缴费', money(annual) + ' 元/年', 'user', '折合每月 ' + money(annual / 12) + ' 元');
+      pm('政府补贴', money(subsidy) + ' 元/年', raw.advSubsidy == null ? 'ref' : 'user',
+        raw.advSubsidy == null ? '全国参考值，各地按缴费档次分档补贴' : '你查到的当地补贴标准');
+      pm('基础养老金标准', money(basePension) + ' 元/月', raw.advUrbanBase == null ? 'ref' : 'user',
+        raw.advUrbanBase == null
+          ? '全国参考值，各地差别很大（从全国最低标准到上海等地的千元级）'
+          : '你查到的当地公布标准');
+      pm('缴费年限', dur(totalMonths), totalSrc,
+        totalSrc === 'user' ? '你查到的累计缴费年限，加算到领取当月' : '从开始缴费年月算到 60 岁');
+      pm('个人账户累计（到领取）', money(account) + ' 元', raw.advAccount == null ? 'auto' : 'user',
+        raw.advAccount == null ? '（年缴 + 补贴）× 缴费年限，未计利息' : '你填的余额');
+      pm('计发月数', months + ' 个月', 'rule', '居民养老 60 岁领取，对应 139 个月');
+
+      /* -------- 缴费 -------- */
+      payRow('coins', '每月平均缴费', '年缴 ' + money(annual) + ' 元 ÷ 12', annual / 12);
+      payRow('bank', '政府补贴（每月计入账户）', '年补 ' + money(subsidy) + ' 元 ÷ 12', subsidy / 12);
+      paySub('每年实际缴费总额', '按年一次性缴纳，多数地区可自选档次', annual, '元/年');
     }
 
     /* ---------------- 个人养老金 / 自存养老（可选） ---------------- */
@@ -626,13 +830,15 @@
       const balance = fvAnnual(annual, CONFIG.ppRate, saveYears);
       addRow('pp', 'wallet', '个人养老金', '领取时按 3% 计税，已扣除', balance / months * (1 - CONFIG.personalPensionTax),
         money(balance) + ' 元 ÷ ' + months + ' 个月 × 97%');
-      stat('个人养老金余额', money(balance) + ' 元');
+      pm('个人养老金余额（到退休）', money(balance) + ' 元', 'calc',
+        '每年 ' + money(annual) + ' 元 × 年化 3% × ' + dur(monthsToRetire));
     }
     if (raw.saveMonthly > 0) {
       const balance = fvMonthly(raw.saveMonthly, CONFIG.savingsRate, monthsToRetire);
       addRow('save', 'piggy', '自己存的钱', '按月复利到退休', balance / months,
         money(balance) + ' 元 ÷ ' + months + ' 个月');
-      stat('储蓄累计', money(balance) + ' 元');
+      pm('自存养老余额（到退休）', money(balance) + ' 元', 'calc',
+        '每月 ' + money(raw.saveMonthly) + ' 元 × 年化 2.5% × ' + dur(monthsToRetire));
     }
 
     const total = rows.reduce(function (s, r) { return s + r.amount; }, 0);
@@ -657,7 +863,10 @@
       manual: manual,
       baseAge: baseAge,
       rows: rows,
-      facts: facts,
+      params: params,
+      payRows: payRows,
+      payTitle: raw.identity === 'urbanrural' ? '你每年交多少'
+        : raw.identity === 'flexible' ? '你每月交多少（自己全额承担）' : '你每月交多少（养老保险）',
       total: total,
       socialTotal: socialTotal,
       extraTotal: total - socialTotal
@@ -810,7 +1019,14 @@
       html += numField({
         id: 'income', icon: 'wallet', label: '当前月收入（税前）',
         value: p.income != null ? p.income : 8000, unit: '元', attrs: 'min="0" max="200000" step="100"',
-        hint: '填大概数就行，系统会自动限制在社平的 60%–300% 之间'
+        hint: '填大概数就行，只是估算缴费基数用；下面两项填了会覆盖它'
+      });
+      html += numField({
+        id: 'monthlyPay', icon: 'coins', label: '每月个人缴养老', optional: true,
+        value: p.monthlyPay != null ? p.monthlyPay : '',
+        placeholder: '查不到就留空', unit: '元/月',
+        attrs: 'min="0" max="20000" step="10"',
+        hint: '工资条上「<b>养老保险（个人）</b>」那一栏，或「电子社保卡 → 个人权益记录单」。填了就用它 ÷ 8% 反推缴费基数，比按月收入估准得多'
       });
     }
 
@@ -867,43 +1083,65 @@
   /* ---------- 高级选项 ---------- */
   function buildAdvanced(prev) {
     const p = prev || {};
-    let html = '';
+    let html = '<p class="pnote" style="padding:10px 0 0;">' +
+      '下面每一项都能在官方渠道查到（点开下一条「这些数字去哪儿查」）。填了就用你的真实值，不填才按规则估——' +
+      '优先级：缴费基数 &gt; 个人月缴 ÷ 8% &gt; 月收入。</p>';
 
     if (identity !== 'urbanrural') {
+      if (identity === 'employee' || identity === 'gov' || identity === 'flexible') {
+        html += numField({
+          id: 'advBase', icon: 'chart', label: '缴费基数（最准）', optional: true,
+          value: p.advBase != null ? p.advBase : '',
+          placeholder: '自动推算', unit: '元/月',
+          attrs: 'min="0" max="60000" step="100"',
+          hint: '「电子社保卡 / 掌上 12333 → 个人权益记录单」里的<b>缴费基数</b>，填了它优先级最高'
+        });
+      }
       html += numField({
         id: 'advWage', icon: 'chart', label: '社平工资 / 计发基数', optional: true,
         value: p.advWage != null ? p.advWage : '',
         placeholder: '默认 8000', unit: '元/月',
         attrs: 'min="0" max="60000" step="100"',
-        hint: '填你所在省份上年度公布的数，不填按全国参考值'
+        hint: '当地人社局每年公布的「全口径城镇单位就业人员平均工资」，不填按全国参考值'
       });
       html += numField({
-        id: 'advAccount', icon: 'coins', label: '个人账户余额', optional: true,
-        value: p.advAccount != null ? p.advAccount : '',
-        placeholder: '自动推算', unit: '元', attrs: 'min="0" max="3000000" step="1000"'
+        id: 'advTotalYears', icon: 'calendar', label: '累计缴费年限', optional: true,
+        value: p.advTotalYears != null ? p.advTotalYears : '',
+        placeholder: '按参工年月算', unit: '年',
+        attrs: 'min="0" max="50" step="0.5"',
+        hint: '社保 App 里「<b>累计缴费月数</b>」÷ 12（如 186 个月 = 15.5 年）。填了就不按参工时间推算，断缴过的更准'
       });
       html += numField({
         id: 'advIndex', icon: 'chart', label: identity === 'gov' ? '实际缴费指数' : '平均缴费指数', optional: true,
         value: p.advIndex != null ? p.advIndex : '',
-        placeholder: '自动推算', unit: '倍', attrs: 'min="0" max="5" step="0.01"'
+        placeholder: '自动推算', unit: '倍', attrs: 'min="0" max="5" step="0.01"',
+        hint: '「个人权益记录单」里的<b>平均缴费工资指数</b>；低于 0.6 或高于 3.0 会被上下限调整'
+      });
+      html += numField({
+        id: 'advAccount', icon: 'coins', label: '个人账户余额（今天）', optional: true,
+        value: p.advAccount != null ? p.advAccount : '',
+        placeholder: '自动推算', unit: '元', attrs: 'min="0" max="3000000" step="1000"',
+        hint: '「个人权益记录单」里的<b>个人账户储存额</b>，填今天时点的数即可'
       });
       html += numField({
         id: 'advDeemed', icon: 'calendar', label: '视同缴费年限', optional: true,
         value: p.advDeemed != null ? p.advDeemed : '',
         placeholder: '自动推算', unit: '年', attrs: 'min="0" max="40" step="0.5"',
-        hint: identity === 'gov' ? '2014 年 10 月前的工作年限' : '1996 年前的工作年限，灵活就业一般没有'
+        hint: identity === 'gov' ? '2014 年 10 月前的工作年限（权益单里有单独一栏）' : '1996 年建账前的工作年限，灵活就业一般没有'
       });
       if (identity === 'gov') {
         html += numField({
           id: 'advDeemedIndex', icon: 'chart', label: '视同缴费指数', optional: true,
           value: p.advDeemedIndex != null ? p.advDeemedIndex : '',
-          placeholder: '默认 1.00', unit: '倍', attrs: 'min="0" max="5" step="0.01"'
+          placeholder: '默认 1.00', unit: '倍', attrs: 'min="0" max="5" step="0.01"',
+          hint: '按职务职级确定，单位人事或人社局能查到；不清楚就用 1.00'
         });
       }
       html += numField({
         id: 'advAnnuity', icon: 'bank', label: identity === 'gov' ? '职业年金余额' : '企业年金余额', optional: true,
         value: p.advAnnuity != null ? p.advAnnuity : '',
-        placeholder: identity === 'gov' ? '自动推算' : '没有就留空', unit: '元', attrs: 'min="0" max="3000000" step="1000"'
+        placeholder: identity === 'gov' ? '自动推算' : '没有就留空', unit: '元', attrs: 'min="0" max="3000000" step="1000"',
+        hint: identity === 'gov' ? '年金由托管机构单独记账，可在单位或年金 App 查' : '企业年金不是强制的，没有就留空'
       });
     } else {
       html += numField({
@@ -999,12 +1237,15 @@
       birthYear: birth.y, birthMonth: birth.m,
       startYear: work.y, startMonth: work.m,
       income: readNum('income', 8000),
+      monthlyPay: readOpt('monthlyPay'),
       flexMode: currentFlexMode(),
       flexAmount: readNum('flexAmount', 960),
       flexGrade: readNum('flexGrade', 0.6),
       urbanAnnual: readUrbanAnnual(),
       advRetireAge: readOpt('advRetireAge'),
       advWage: readOpt('advWage'),
+      advBase: readOpt('advBase'),
+      advTotalYears: readOpt('advTotalYears'),
       advAccount: readOpt('advAccount'),
       advIndex: readOpt('advIndex'),
       advDeemed: readOpt('advDeemed'),
@@ -1040,6 +1281,18 @@
   }
 
   /* ---------- 渲染结果 ---------- */
+  const SRC_META = {
+    user: { text: '你填写', cls: 'user' },
+    auto: { text: '估算', cls: 'auto' },
+    ref:  { text: '参考值', cls: 'ref' },
+    calc: { text: '按公式', cls: 'calc' },
+    rule: { text: '按规则', cls: 'ref' }
+  };
+  function chip(src) {
+    const m = SRC_META[src] || SRC_META.auto;
+    return '<i class="chip chip--' + m.cls + '">' + m.text + '</i>';
+  }
+
   function renderResult(r) {
     const parts = [];
 
@@ -1066,8 +1319,28 @@
       '</div>'
     );
 
+    // 每月缴费（新增：让用户看到自己每月实际交多少）
+    if (r.payRows.length) {
+      let payBlock = '<div class="blk"><div class="rhead2">' + icon('wallet') + r.payTitle + '</div><div class="list">';
+      r.payRows.forEach(function (x) {
+        payBlock += '<div class="item' + (x.sub ? ' sub' : '') + '">' +
+          (x.icon ? icon(x.icon) : '') +
+          '<span class="nm">' + x.name + '<em>' + x.note + '</em></span>' +
+          '<span class="amt">' + money(x.amount) + '<span>' + x.unit + '</span></span></div>';
+      });
+      payBlock += '</div>';
+      payBlock += '<p class="hint" style="margin-top:8px;">' +
+        (r.identity === 'urbanrural'
+          ? '居民养老按年缴，表中「每月」是按 12 个月平摊，方便和职工养老对比。'
+          : r.identity === 'flexible'
+            ? '灵活就业按 20% 全额自缴，只有 8% 进个人账户，另 12% 进统筹——这就是"自己交划算吗"的关键。'
+            : '个人只掏养老 8%（进个人账户），单位另缴 16%（进统筹），不占你的工资。') +
+        '</p></div>';
+      parts.push(payBlock);
+    }
+
     // 待遇构成
-    let list = '<div class="rhead2">' + icon('list') + '每月能领多少</div><div class="list">';
+    let list = '<div class="blk"><div class="rhead2">' + icon('list') + '每月能领多少</div><div class="list">';
     r.rows.forEach(function (row) {
       list += '<div class="item">' + icon(row.icon) +
         '<span class="nm">' + row.name + '<em>' + row.note + '</em></span>' +
@@ -1084,17 +1357,26 @@
       list += '<div class="item sum"><span class="nm">合计月待遇<em>全部由社保发放</em></span>' +
         '<span class="amt">' + money(r.total) + '<span>元</span></span></div>';
     }
-    list += '</div>';
+    list += '</div></div>';
     parts.push(list);
 
-    // 推算依据
-    if (r.facts.length) {
-      let f = '<div class="facts"><div class="rhead2">' + icon('chart') + '推算依据</div><dl style="margin:0;">';
-      r.facts.forEach(function (x) {
-        f += '<div class="fact"><dt>' + x.label + '</dt><dd>' + x.value + '</dd></div>';
+    // 本次测算用的数字：把没填、由系统估算的数字全部摊开给用户看
+    if (r.params.length) {
+      const estimated = r.params.filter(function (x) {
+        return x.src === 'auto' || x.src === 'ref';
+      }).length;
+      let p = '<div class="params"><div class="rhead2">' + icon('chart') + '本次测算用的数字</div>';
+      p += '<p class="pnote">' + (estimated
+        ? '这一步用到的 ' + r.params.length + ' 个数字里，有 <b>' + estimated + ' 个你没填</b>，是系统按全国统一规则补的（标「估算 / 参考值」）。' +
+          '想让结果更贴近你的真实情况，可以展开上面「我查到了准确数字」，把社保 App 能查到的几项填进去。'
+        : '这些数字全部来自你填写的内容，没有使用估算值或参考值。') + '</p>';
+      r.params.forEach(function (x) {
+        p += '<div class="pitem"><div><div class="pn">' + x.label + ' ' + chip(x.src) + '</div>' +
+          (x.note ? '<div class="pd">' + x.note + '</div>' : '') + '</div>' +
+          '<div class="pv">' + x.value + '</div></div>';
       });
-      f += '</dl></div>';
-      parts.push(f);
+      p += '</div>';
+      parts.push(p);
     }
 
     // 明细
@@ -1104,9 +1386,16 @@
     });
     d += '<div class="dgroup"><h4>口径说明</h4><p>' +
       '各金额取整到元，并按今天的社平工资折算——未预测未来工资增长和通胀，等价于“以今天购买力衡量”，所以你几十年后实际拿到的名义金额会高于这里。' +
-      '缴费基数、平均指数、视同缴费年限、个人账户余额等带“推算”的数字，是按全国统一规则和你的收入估算的，不是你社保记录里的真实数字；有社保 App 数据可在“我清楚我的账户数字”里直接填。' +
-      '个人账户与职业年金已按当前缴费基数推算到退休（未计记账利息与投资收益），因此会高于你社保 App 里今天的余额；城乡居民基础养老金、过渡系数均使用全国参考值。' +
+      '标「估算」「参考值」的数字，是按全国统一规则和你的收入/缴费推算的，不是你社保记录里的真实数字；「本次测算用的数字」里已经逐个列出，并注明每个数的来源。' +
+      '个人账户与职业年金已按当前缴费基数推算到退休（未计记账利息与投资收益），因此会高于你社保 App 里今天的余额；若你填了今天的余额，则按今天余额计，未含今后继续缴费的部分。' +
+      '城乡居民基础养老金、政府补贴、过渡系数均使用全国参考值，实际以当地公布为准。' +
       '个人养老金领取时按 3% 单独计税，已在结果中扣除。</p></div>';
+    d += '<div class="dgroup"><h4>缴费比例依据</h4><p>' +
+      '企业职工：个人 8%（全部进个人账户）+ 单位 16%（进统筹）；' +
+      '机关事业：与企业相同，另有职业年金个人 4% + 单位 8%；' +
+      '灵活就业：总费率 20%，其中 8% 进个人账户；' +
+      '城乡居民：按年自选档次缴费，政府按档次给予补贴。' +
+      '以上为全国统一费率，个别地区阶段性降费率会有差异。</p></div>';
     d += '</details>';
     parts.push(d);
 
@@ -1115,6 +1404,15 @@
     const box = $('result');
     box.innerHTML = parts.join('');
     box.hidden = false;
+
+    // 把“系统替你估的值”写回上方空着的输入框（只改占位提示，不动你填的内容）
+    r.params.forEach(function (x) {
+      if (!x.field || !x.short) return;
+      const el = $(x.field);
+      if (!el) return;
+      if (String(el.value).trim() !== '') return;
+      el.placeholder = (x.src === 'auto' || x.src === 'ref' ? '估算 ' : '≈ ') + x.short;
+    });
   }
 
   /* ---------- 校验与计算 ---------- */
@@ -1126,6 +1424,7 @@
     if (monthsBetween(birth, cur) > 80 * 12) return '出生年月看起来不太对，请检查。';
     if (monthsBetween(birth, work) < 14 * 12) return '参加工作年月要比出生年月晚 14 年以上。';
     if (monthsBetween(work, cur) < 0) return '参加工作年月不能晚于现在。';
+    if (raw.advTotalYears > 0 && raw.advTotalYears > 50) return '累计缴费年限超过 50 年，请检查一下。';
     return '';
   }
 
